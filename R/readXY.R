@@ -19,11 +19,17 @@ readXY <- function(filename,skip,output="ratio") {
   stopifnot(output %in% c("theta","ratio"))
   
   data <- read.table(file=filename, skip=skip, sep="\t", header=T,as.is=T,check.names=F) 
-  X <- pivot_wider(data=data,id_cols=colnames(data)[1:2],names_from=colnames(data)[2],values_from="X")
+  
+  data.1 <- data[,c(colnames(data)[1:2],"X")]
+  X <- data.1 %>% pivot_wider(names_from=colnames(data.1)[2],values_from="X")
+  #X <- pivot_wider(data=data,id_cols=colnames(data)[1:2],names_from=colnames(data)[2],values_from="X")
   sample.id <- colnames(X)[-1]
   snp.id <- X[,1][[1]]
   X <- as.matrix(X[,-1])
-  Y <- pivot_wider(data=data,id_cols=colnames(data)[1:2],names_from=colnames(data)[2],values_from="Y")
+  
+  data.2 <- data[,c(colnames(data)[1:2],"Y")]
+  Y <- data.2 %>% pivot_wider(names_from=colnames(data.2)[2],values_from="Y")
+  #Y <- pivot_wider(data=data,id_cols=colnames(data)[1:2],names_from=colnames(data)[2],values_from="Y")
   Y <- as.matrix(Y[,-1])
   
   if (output=="ratio") {
